@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git url: 'https://github.com/sandeepnmenon8888/simple-webapp-docker.git'
+                    git branch: 'main', url: 'https://github.com/sandeepnmenon8888/simple-webapp-docker.git'
             }
         }
 
