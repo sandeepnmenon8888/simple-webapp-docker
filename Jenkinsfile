@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     environment {
-        OCP_URL = "https://api.crc.testing:6443"
+        OCP_URL = "https://api.crc.testing:6443"        // Update if different
         OCP_PROJECT = "dockerapp"
         APP_NAME = "hello-world"
+        REGISTRY_IMAGE = "image-registry.openshift-image-registry.svc:5000/dockerapp/hello-world:latest"
     }
 
     stages {
@@ -14,7 +15,7 @@ pipeline {
             }
         }
 
-        stage('Build Image') {
+        stage('Build Image Locally') {
             steps {
                 sh 'podman build -t $APP_NAME:latest .'
                 sh 'podman save $APP_NAME:latest -o image.tar'
@@ -32,15 +33,15 @@ pipeline {
             }
         }
 
-        stage('Push Image to OpenShift') {
+        stage('Push Image to BuildConfig') {
             steps {
-                sh 'oc start-build $APP_NAME --from-archive=image.tar --follow'
+                sh 'oc start-build $APP_NAME --from-archive=image.tar --wait --follow'
             }
         }
 
-        stage('Restart Deployment') {
+        stage('Update Deployment Image') {
             steps {
-                sh 'oc rollout restart dc/$APP_NAME'
+                sh 'oc set image deployment/$APP_NAME $APP_NAME=$REGISTRY_IMAGE'
             }
         }
     }
