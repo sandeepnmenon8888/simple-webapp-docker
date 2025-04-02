@@ -1,6 +1,9 @@
-FROM python:3.9-alpine
+FROM python:3.9-slim
 
-WORKDIR /opt
+WORKDIR /app
 COPY app.py .
+
 RUN pip install flask
-CMD ["flask", "run", "--host=0.0.0.0", "--port=8080"]
+
+EXPOSE 5000
+CMD ["python", "app.py"]
