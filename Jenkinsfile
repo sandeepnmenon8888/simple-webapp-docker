@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        OCP_URL = "https://192.168.1.45:6443"
+        OCP_URL = "https://host.docker.internal:6443"
         OCP_PROJECT = "dockerapp"
         APP_NAME = "hello-world"
         REGISTRY_IMAGE = "image-registry.openshift-image-registry.svc:5000/dockerapp/hello-world:latest"
