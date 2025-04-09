@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        OCP_URL = "https://api.crc.testing:6443"        // Change if your cluster uses a different API URL
+        OCP_URL = "https://api.crc.testing:6443"
         OCP_PROJECT = "dockerapp"
         APP_NAME = "hello-world"
         REGISTRY_IMAGE = "image-registry.openshift-image-registry.svc:5000/dockerapp/hello-world:latest"
@@ -11,14 +11,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                    git branch: 'main', url: 'https://github.com/sandeepnmenon8888/simple-webapp-docker.git'
-            }
-        }
-
-        stage('Build Image Locally') {
-            steps {
-                sh 'docker build -t $APP_NAME:latest .'
-                sh 'docker save $APP_NAME:latest -o image.tar'
+                git branch: 'main', url: 'https://github.com/sandeepnmenon8888/simple-webapp-docker.git'
             }
         }
 
@@ -33,9 +26,9 @@ pipeline {
             }
         }
 
-        stage('Push Image to OpenShift') {
+        stage('Start OpenShift Build') {
             steps {
-                sh 'oc start-build $APP_NAME --from-archive=image.tar --wait --follow'
+                sh 'oc start-build $APP_NAME --follow'
             }
         }
 
