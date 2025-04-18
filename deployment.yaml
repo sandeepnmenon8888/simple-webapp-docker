@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+  namespace: dockerapp
+  labels:
+    app: hello-world
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+        - name: hello-world
+          image: image-registry.openshift-image-registry.svc:5000/dockerapp/hello-world:latest
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /data
+              name: flask-storage
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          resources: {}
+      volumes:
+        - name: flask-storage
+          persistentVolumeClaim:
+            claimName: flaskapp-pvc
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
