@@ -28,10 +28,19 @@ pipeline {
 
         stage('Start OpenShift Build') {
             steps {
-                sh 'oc start-build $APP_NAME --follow'
+                // This builds your image using BuildConfig which reads the Dockerfile + app.py
+                sh 'oc start-build $APP_NAME --wait --follow'
             }
         }
 
+        stage('Apply Deployment with Volume Mount') {      // ✅ NEW STAGE
+            steps {
+                // This ensures the updated deployment.yaml is used (with volume mount)
+                sh 'oc apply -f deployment.yaml -n $OCP_PROJECT'
+            }
+        }
+
+        // Optional: Re-apply image set (only needed if ImageStream was overridden)
         stage('Update Deployment Image') {
             steps {
                 sh 'oc set image deployment/$APP_NAME $APP_NAME=$REGISTRY_IMAGE'
