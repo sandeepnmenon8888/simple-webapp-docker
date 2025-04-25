@@ -32,15 +32,15 @@ pipeline {
             }
         }
 
-        stage('Apply Deployment') {
+        stage('Apply Deployment (with volume)') {
             steps {
                 sh 'oc apply -f deployment.yaml -n $OCP_PROJECT'
             }
         }
 
-        stage('Update Deployment Image (optional)') {
+        stage('Restart Deployment') {
             steps {
-                sh 'oc set image deployment/$APP_NAME $APP_NAME=$REGISTRY_IMAGE'
+                sh 'oc rollout restart deployment/$APP_NAME -n $OCP_PROJECT'
             }
         }
     }
