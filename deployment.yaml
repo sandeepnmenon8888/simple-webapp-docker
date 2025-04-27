@@ -31,7 +31,7 @@ spec:
       volumes:
         - name: flask-storage
           persistentVolumeClaim:
-            claimName: flaskapp-pvc
+            claimName: flaskapp-pvc-new   # 🔥 UPDATED PVC NAME
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
