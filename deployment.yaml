@@ -32,6 +32,8 @@ spec:
         - name: flask-storage
           persistentVolumeClaim:
             claimName: flaskapp-pvc-new   # 🔥 UPDATED PVC NAME
+      securityContext:
+            runAsUser: 0
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
