@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return "Hello World"
+    return "Hello World and additionally checking storage mount"
 
 @app.route('/read_file')
 def read_file():
